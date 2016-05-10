@@ -1,12 +1,14 @@
 #include "ofApp.h"
 
+
+
 void ofApp::setup() {
 	
 	// Check Lenovo AIO res ?
-	// 480p -> 640 * 480
+	// 480p -> 854//640 * 480
 	// 720p -> 1280 * 720
 	// 1080p -> 1920 * 1080
-	camWidth = 640;
+	camWidth = 854;
 	camHeight = 480;
 	gridSpace = 5;
 	
@@ -23,18 +25,36 @@ void ofApp::setup() {
 	gui.setup();
 	gui.add(resetBackground.set("Reset (X)", false));
 	gui.add(switchBackground.set("Switch (Z)", true));
+
+	std::vector<std::string> v = { "Hello", "World" };
 	//gui.add(learningTime.set("Learning Time", 5, 0, 30));
 	gui.add(thresholdValue.set("Threshold (+/-)", 30, 0, 255));
+
+	//sdf
+	currentBackground = 0;
+	backgroundList.push_back("backgrounds/back01.jpg");
+	backgroundList.push_back("backgrounds/back02.jpg");
+	backgroundList.push_back("backgrounds/back03.jpg");
+	photoBackground.load(backgroundList[currentBackground]);
+	photoBackground.resize(camWidth, camHeight);	
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
 	ofBackground(100, 100, 100);
 	vidGrabber.update();
+
+	if (updateBackground) {
+		photoBackground.load(backgroundList[currentBackground]);
+		photoBackground.resize(camWidth, camHeight);
+		updateBackground = false;
+	}	
+
 	if (resetBackground) {
 		background.reset();
 		resetBackground = false;
 	}
+
 	if (vidGrabber.isFrameNew()) {
 		//background.setLearningTime(learningTime);
 		background.setThresholdValue(thresholdValue);
@@ -43,12 +63,13 @@ void ofApp::update() {
 		
 		ofPixels &viPixels = vidGrabber.getPixels();
 		ofPixels &thPixels = thresholded.getPixels();
-		
+		ofPixels &phPixels = photoBackground.getPixels();
+
 		for (int i = 0; i < thPixels.size(); i++) {
 			if (thPixels[i] < 10) {
-				videoComposition[(i * 3) + 0] = 100;
-				videoComposition[(i * 3) + 1] = 255;
-				videoComposition[(i * 3) + 2] = 100;
+				videoComposition[(i * 3) + 0] = phPixels[(i * 3) + 0];
+				videoComposition[(i * 3) + 1] = phPixels[(i * 3) + 1];
+				videoComposition[(i * 3) + 2] = phPixels[(i * 3) + 2];
 			}
 			else {
 				videoComposition[(i * 3) + 0] = viPixels[(i * 3) + 0];
@@ -58,17 +79,24 @@ void ofApp::update() {
 		}
 		videoTexture.loadData(videoComposition);
 	}
+
+	if (photo == true) {
+		imgComp.setFromPixels(videoComposition);
+		string fileName = "snap_" + ofToString(now.elapsed()) + ".png";
+		imgComp.save(fileName);
+		photo = false;
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
 	ofSetHexColor(0xffffff);
-	vidGrabber.draw(gridSpace, gridSpace);
+	//vidGrabber.draw(gridSpace, gridSpace);
 	if (thresholded.isAllocated()) {
 		if (switchBackground) {
-			videoTexture.draw(gridSpace + camWidth, gridSpace, camWidth, camHeight);
+			videoTexture.draw(gridSpace, gridSpace, camWidth, camHeight);
 		}else{
-			thresholded.draw(gridSpace + camWidth, gridSpace, camWidth, camHeight);
+			thresholded.draw(gridSpace, gridSpace, camWidth, camHeight);
 		}
 	}
 	gui.draw();
@@ -77,9 +105,29 @@ void ofApp::draw() {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 	switch (key) {
+	case 'q':
+		currentBackground--;
+		if (currentBackground < 0) {
+			currentBackground = backgroundList.size()-1;
+		}
+		updateBackground = true;
+	case 'Q':
+		break;
+	case 'w':
+		currentBackground++;
+		if (currentBackground >= backgroundList.size()) {
+			currentBackground = 0;
+		}
+		updateBackground = true;
+	case 'W':
+		break;
 	case 's':
 		vidGrabber.videoSettings();
 	case 'S':
+		break;
+	case 'p':
+		photo = true;
+	case 'P':
 		break;
 	case 'x':
 		resetBackground = true;
