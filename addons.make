@@ -1,5 +1,6 @@
 ofxCv
 ofxGui
+ofxMSAInteractiveObject
 ofxNetwork
 ofxOpenCv
 ofxVectorGraphics
