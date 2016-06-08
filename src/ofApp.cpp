@@ -183,7 +183,7 @@ void ofApp::keyPressed(int key) {
 	
 	case 'c':
 	case 'C':
-		showGUI != showGUI;
+		showGUI = !showGUI;
 		break;
 	case 'q':
 	case 'Q':
