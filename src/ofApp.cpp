@@ -249,8 +249,11 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	bool prtPressed = printButton.isMouseDown();
 
 	if (prtPressed) {
-		string relpath = "C:\\Users\\hmbe\\Code\\OF9\\apps\\myApps\\PhotoBooth\\bin\\data\\";
-		string printcmd = "i_view64.exe " + relpath + fileName + " /print=\""+printerName+"\" /resize=(800,600) ";
+		string path = ofToDataPath(fileName, true);
+		//Fix error in ofToDataPath specific for Windows 10
+		path.insert(2,"/");
+		path.replace(2,2,"\\");
+		string printcmd = "i_view64.exe " + path + " /print=\""+printerName+"\"";
 		system(printcmd.c_str());
 	}
 

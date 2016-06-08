@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxCv.h"
 #include "ofxGui.h"
+#include "ofUtils.h"
 #include "ImageButton.h"
 #include "Poco/Timestamp.h"
 #include <vector>
