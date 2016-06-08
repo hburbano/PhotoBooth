@@ -84,6 +84,7 @@ public:
 	//ofParameter<float> learningTime; //Probar background learning en cabina...---
 	ofParameter<float> thresholdValue;
 	ofParameter<bool> snapPhoto;
+	ofParameter<bool> showGUI;
 	//ofParameter<enum> cas;
 
 

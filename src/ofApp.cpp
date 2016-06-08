@@ -56,7 +56,8 @@ void ofApp::setup() {
 	gui.add(snapPhoto.set("Photo (P)", false));
 	//gui.add(learningTime.set("Learning Time", 5, 0, 30));
 	gui.add(thresholdValue.set("Threshold (+/-)", 30, 0, 255));
-
+	gui.add(showGUI.set("Config (C)", false));
+	
 	//Background options
 	currentBackground = 0;
 	backgroundList.push_back("backgrounds/back01.jpg");
@@ -140,7 +141,9 @@ void ofApp::videoCaptureDraw() {
 			thresholded.draw(gridSpace, gridSpace, camWidth, camHeight);
 		}
 	}
-	gui.draw();
+	if (showGUI) {
+		gui.draw();
+	}
 }
 //--------------------------------------------------------------
 void ofApp::update() {
@@ -177,37 +180,42 @@ void ofApp::draw() {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 	switch (key) {
+	
+	case 'c':
+	case 'C':
+		showGUI != showGUI;
+		break;
 	case 'q':
+	case 'Q':
 		currentBackground--;
 		if (currentBackground < 0) {
 			currentBackground = backgroundList.size()-1;
 		}
 		updateBackground = true;
-	case 'Q':
 		break;
 	case 'w':
+	case 'W':
 		currentBackground++;
 		if (currentBackground >= backgroundList.size()) {
 			currentBackground = 0;
 		}
 		updateBackground = true;
-	case 'W':
 		break;
 	case 's':
-		vidGrabber.videoSettings();
 	case 'S':
+		vidGrabber.videoSettings();
 		break;
 	case 'p':
-		snapPhoto = true;
 	case 'P':
+		snapPhoto = true;
 		break;
 	case 'x':
-		resetBackground = true;
 	case 'X':
+		resetBackground = true;
 		break;
 	case 'z':
-		switchBackground = !switchBackground;
 	case 'Z':
+		switchBackground = !switchBackground;
 		break;
 	case '+':
 		thresholdValue++;
