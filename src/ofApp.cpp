@@ -18,8 +18,6 @@ void ofApp::setup() {
 
 	//Printer config
 
-	printerName = "PDFCreator";
-
 	//Config Buttons
 	picButton.setImage("buttons/camera.png");
 	picButton.set((camWidth - buttonSize)/2, camHeight - buttonSize - lowmargin, buttonSize, buttonSize);
@@ -47,22 +45,31 @@ void ofApp::setup() {
 
 	videoComposition.allocate(camWidth, camHeight, OF_PIXELS_RGB);
 	videoTexture.allocate(videoComposition);
+	logo.loadImage("backgrounds/logo.jpg");
+
 
 	//Config GUI
 
 	gui.setup();
-	gui.add(resetBackground.set("Reset (X)", false));
-	gui.add(switchBackground.set("Switch (Z)", true));
-	gui.add(snapPhoto.set("Photo (P)", false));
+	gui.setSize(400, 200);
+	gui.add(resetBackground.set("Reset: X", false));
+	gui.add(switchBackground.set("Switch: Z", true));
+	gui.add(snapPhoto.set("Photo: P ", false));
 	//gui.add(learningTime.set("Learning Time", 5, 0, 30));
-	gui.add(thresholdValue.set("Threshold (+/-)", 30, 0, 255));
-	gui.add(showGUI.set("Config (C)", false));
+	gui.add(thresholdValue.set("Threshold: 1 2", 30, 0, 255));
+	gui.add(showGUI.set("Config: C", false));
+	gui.add(pname.set("Printer", "PDFCreator"));
+	gui.add(email.set("Email", "castereio1_1234123@tubler.com.co"));
+	gui.saveToFile("settings.xml");
+	gui.loadFromFile("settings.xml");
+
 	
 	//Background options
 	currentBackground = 0;
 	backgroundList.push_back("backgrounds/back01.jpg");
 	backgroundList.push_back("backgrounds/back02.jpg");
 	backgroundList.push_back("backgrounds/back03.jpg");
+	backgroundList.push_back("backgrounds/back04.jpg");
 	photoBackground.load(backgroundList[currentBackground]);
 	photoBackground.resize(camWidth, camHeight);	
 
@@ -108,9 +115,10 @@ void ofApp::videoCaptureUpdate() {
 		ofPixels &viPixels = vidGrabber.getPixels();
 		ofPixels &thPixels = thresholded.getPixels();
 		ofPixels &phPixels = photoBackground.getPixels();
+		ofPixels &lgPixels = logo.getPixels();
 
 		for (int i = 0; i < thPixels.size(); i++) {
-			if (thPixels[i] < 10) {
+			if(thPixels[i] < 10) {
 				videoComposition[(i * 3) + 0] = phPixels[(i * 3) + 0];
 				videoComposition[(i * 3) + 1] = phPixels[(i * 3) + 1];
 				videoComposition[(i * 3) + 2] = phPixels[(i * 3) + 2];
@@ -121,6 +129,8 @@ void ofApp::videoCaptureUpdate() {
 				videoComposition[(i * 3) + 2] = viPixels[(i * 3) + 2];
 			}
 		}
+		lgPixels.pasteInto(videoComposition, 15, 15);
+		
 		videoTexture.loadData(videoComposition);
 	}
 
@@ -141,6 +151,7 @@ void ofApp::videoCaptureDraw() {
 			thresholded.draw(gridSpace, gridSpace, camWidth, camHeight);
 		}
 	}
+
 	if (showGUI) {
 		gui.draw();
 	}
@@ -177,6 +188,10 @@ void ofApp::draw() {
 	}
 }
 
+void ofApp::saveSettings() {
+	gui.saveToFile("settings.xml");
+}
+
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 	switch (key) {
@@ -184,6 +199,7 @@ void ofApp::keyPressed(int key) {
 	case 'c':
 	case 'C':
 		showGUI = !showGUI;
+		saveSettings();
 		break;
 	case 'q':
 	case 'Q':
@@ -192,6 +208,7 @@ void ofApp::keyPressed(int key) {
 			currentBackground = backgroundList.size()-1;
 		}
 		updateBackground = true;
+		saveSettings();
 		break;
 	case 'w':
 	case 'W':
@@ -200,10 +217,7 @@ void ofApp::keyPressed(int key) {
 			currentBackground = 0;
 		}
 		updateBackground = true;
-		break;
-	case 's':
-	case 'S':
-		vidGrabber.videoSettings();
+		saveSettings();
 		break;
 	case 'p':
 	case 'P':
@@ -220,10 +234,12 @@ void ofApp::keyPressed(int key) {
 	case '+':
 		thresholdValue++;
 		if (thresholdValue > 255) thresholdValue = 255;
+		saveSettings();
 		break;
 	case '-':
 		thresholdValue--;
 		if (thresholdValue < 0) thresholdValue = 0;
+		saveSettings();
 		break;
 	}
 }
@@ -261,7 +277,7 @@ void ofApp::mouseReleased(int x, int y, int button) {
 		//Fix error in ofToDataPath specific for Windows 10
 		path.insert(2,"/");
 		path.replace(2,2,"\\");
-		string printcmd = "i_view64.exe " + path + " /print=\""+printerName+"\"";
+		string printcmd = "i_view64.exe " + path + " /print=\""+pname.toString()+"\"";
 		system(printcmd.c_str());
 	}
 

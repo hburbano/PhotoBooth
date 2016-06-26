@@ -59,12 +59,12 @@ public:
 	void imageUploadUpdate();
 	void imageUploadDraw();
 
-	//Backgrounds
+	//Backgrounds & logo
 	ofImage photoBackground;
+	ofImage logo;
 	std::vector<std::string> backgroundList;
 	int currentBackground;
 	bool updateBackground = true;
-
 
 	//Capture snapshot
 	ofImage imgComp;
@@ -72,12 +72,12 @@ public:
 
 	//Print opcionts
 	string fileName;
-	string printerName;
 
 	int camWidth;
 	int camHeight;
 	int gridSpace;
 
+	void saveSettings();
 	ofxPanel gui;
 	ofParameter<bool> resetBackground;
 	ofParameter<bool> switchBackground;
@@ -85,7 +85,8 @@ public:
 	ofParameter<float> thresholdValue;
 	ofParameter<bool> snapPhoto;
 	ofParameter<bool> showGUI;
+	ofParameter<string> pname;
+	ofParameter<string> email;
 	//ofParameter<enum> cas;
-
 
 };

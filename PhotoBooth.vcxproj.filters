@@ -112,6 +112,18 @@
 		<ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp">
 			<Filter>addons\ofxOpenCv\src</Filter>
 		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\src\Client.cpp">
+			<Filter>addons\ofxSMTP\libs\ofxSMTP\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\src\Credentials.cpp">
+			<Filter>addons\ofxSMTP\libs\ofxSMTP\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\src\GmailSettings.cpp">
+			<Filter>addons\ofxSMTP\libs\ofxSMTP\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\src\Settings.cpp">
+			<Filter>addons\ofxSMTP\libs\ofxSMTP\src</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxVectorGraphics\src\ofxVectorGraphics.cpp">
 			<Filter>addons\ofxVectorGraphics\src</Filter>
 		</ClCompile>
@@ -260,6 +272,30 @@
 		</Filter>
 		<Filter Include="addons\ofxOpenCv\libs\opencv\include\opencv2\videostab">
 			<UniqueIdentifier>{D4F01CB4-61E3-5965-F3B1-CFB9}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSMTP">
+			<UniqueIdentifier>{24F8A07D-0D69-80AB-71A8-BDED}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSMTP\src">
+			<UniqueIdentifier>{93054CF2-551A-CB9A-528C-CC8F}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSMTP\libs">
+			<UniqueIdentifier>{B7EBC5B6-56E4-7AF6-CA5F-D853}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSMTP\libs\ofxSMTP">
+			<UniqueIdentifier>{D761C18B-A4EC-21AD-C936-16B3}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSMTP\libs\ofxSMTP\include">
+			<UniqueIdentifier>{73E0D895-04D4-F10C-C96B-D0D7}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSMTP\libs\ofxSMTP\include\ofx">
+			<UniqueIdentifier>{31335A6F-7507-6A66-6AB4-B78A}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP">
+			<UniqueIdentifier>{65C2B41C-A4E6-8F07-2EBF-1570}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSMTP\libs\ofxSMTP\src">
+			<UniqueIdentifier>{F06A31EC-554B-39B1-DC54-AE87}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxVectorGraphics">
 			<UniqueIdentifier>{5A7F3658-B06B-DB97-F4E1-DD19}</UniqueIdentifier>
@@ -886,6 +922,27 @@
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab\videostab.hpp">
 			<Filter>addons\ofxOpenCv\libs\opencv\include\opencv2\videostab</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSMTP\src\ofxSMTP.h">
+			<Filter>addons\ofxSMTP\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP\Client.h">
+			<Filter>addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP\Credentials.h">
+			<Filter>addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP\Events.h">
+			<Filter>addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP\GmailSettings.h">
+			<Filter>addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP\Settings.h">
+			<Filter>addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP\Types.h">
+			<Filter>addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxVectorGraphics\src\ofxVectorGraphics.h">
 			<Filter>addons\ofxVectorGraphics\src</Filter>
