@@ -16,7 +16,12 @@ void ofApp::setup() {
 	buttonSize = 50;
 	spacing = buttonSize * 7;
 
-	//Printer config
+	//Email config
+	senderEmail = "pbcasamem tumaco <pbcasamentco@gmail.com>";
+	ofx::SMTP::Settings settings = ofx::SMTP::Settings::loadFromXML("email.xml");
+	smtp.setup(settings);
+	ofAddListener(smtp.events.onSMTPDelivery, this, &ofApp::onSMTPDelivery);
+	ofAddListener(smtp.events.onSMTPException, this, &ofApp::onSMTPException);
 
 	//Config Buttons
 	picButton.setImage("buttons/camera.png");
@@ -46,6 +51,7 @@ void ofApp::setup() {
 	videoComposition.allocate(camWidth, camHeight, OF_PIXELS_RGB);
 	videoTexture.allocate(videoComposition);
 	logo.loadImage("backgrounds/logo.jpg");
+	lema.loadImage("backgrounds/lema.jpg");
 
 
 	//Config GUI
@@ -56,11 +62,11 @@ void ofApp::setup() {
 	gui.add(switchBackground.set("Switch: Z", true));
 	gui.add(snapPhoto.set("Photo: P ", false));
 	//gui.add(learningTime.set("Learning Time", 5, 0, 30));
-	gui.add(thresholdValue.set("Threshold: 1 2", 30, 0, 255));
+	gui.add(thresholdValue.set("Threshold: + -", 30, 0, 255));
 	gui.add(showGUI.set("Config: C", false));
 	gui.add(pname.set("Printer", "PDFCreator"));
-	gui.add(email.set("Email", "castereio1_1234123@tubler.com.co"));
-	gui.saveToFile("settings.xml");
+	gui.add(email.set("Email", "nu8guvofzqstr@tumblr.com"));
+	//gui.saveToFile("settings.xml");
 	gui.loadFromFile("settings.xml");
 
 	
@@ -70,9 +76,9 @@ void ofApp::setup() {
 	backgroundList.push_back("backgrounds/back02.jpg");
 	backgroundList.push_back("backgrounds/back03.jpg");
 	backgroundList.push_back("backgrounds/back04.jpg");
+	backgroundList.push_back("backgrounds/back05.jpg");
 	photoBackground.load(backgroundList[currentBackground]);
-	photoBackground.resize(camWidth, camHeight);	
-
+	photoBackground.resize(camWidth, camHeight);
 }
 
 void ofApp::snap() {
@@ -116,6 +122,7 @@ void ofApp::videoCaptureUpdate() {
 		ofPixels &thPixels = thresholded.getPixels();
 		ofPixels &phPixels = photoBackground.getPixels();
 		ofPixels &lgPixels = logo.getPixels();
+		ofPixels &lmPixels = lema.getPixels();
 
 		for (int i = 0; i < thPixels.size(); i++) {
 			if(thPixels[i] < 10) {
@@ -130,7 +137,7 @@ void ofApp::videoCaptureUpdate() {
 			}
 		}
 		lgPixels.pasteInto(videoComposition, 15, 15);
-		
+		lmPixels.pasteInto(videoComposition, videoComposition.getWidth() / 2 - lmPixels.getWidth() / 2, videoComposition.getHeight() - lmPixels.getHeight() - 15);
 		videoTexture.loadData(videoComposition);
 	}
 
@@ -271,6 +278,29 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	bool prvPressed = prevButton.isMouseDown();
 	bool nxtPressed = nextButton.isMouseDown();
 	bool prtPressed = printButton.isMouseDown();
+	bool fbkPressed = facebookButton.isMouseDown();
+	
+	if (fbkPressed) {
+		ofx::SMTP::Message::SharedPtr message = ofx::SMTP::Message::makeShared();
+		message->setSender(Poco::Net::MailMessage::encodeWord(senderEmail, "UTF-8"));
+		message->setSubject(Poco::Net::MailMessage::encodeWord("CASA DE LA MEMORIA", "UTF-8"));
+		message->addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,
+			email.toString()));
+		try
+		{
+			string path = ofToDataPath(fileName, true);
+			//Fix error in ofToDataPath specific for Windows 10
+			path.insert(2, "/");
+			path.replace(2, 2, "\\");
+			message->addAttachment(Poco::Net::MailMessage::encodeWord(fileName, "UTF-8"),
+				new Poco::Net::FilePartSource(path));
+		}
+		catch (const Poco::OpenFileException& exc)
+		{
+			ofLogError("ofApp::keyPressed") << exc.name() << " : " << exc.displayText();
+		}
+		smtp.send(message);
+	}
 
 	if (prtPressed) {
 		string path = ofToDataPath(fileName, true);
@@ -348,5 +378,45 @@ void ofApp::gotMessage(ofMessage msg) {
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo) {
+
+}
+
+
+
+void ofApp::onSMTPDelivery(ofx::SMTP::Message::SharedPtr& message)
+{
+	ofLogNotice("ofApp::onSMTPDelivery") << "Message Sent: " << message->getSubject();
+}
+
+
+void ofApp::onSMTPException(const ofx::SMTP::ErrorArgs& evt)
+{
+	ofLogError("ofApp::onSMTPException") << evt.getError().displayText();
+
+	if (evt.getMessage())
+	{
+		ofLogError("ofApp::onSMTPException") << evt.getMessage()->getSubject();
+	}
+
+}
+
+
+void ofApp::onSSLClientVerificationError(Poco::Net::VerificationErrorArgs& args)
+{
+	ofLogNotice("ofApp::onClientVerificationError") << std::endl << ofToString(args);
+
+	// If you want to proceed, you must allow the user to inspect the certificate
+	// and set `args.setIgnoreError(true);` if they want to continue.
+
+	args.setIgnoreError(true);
+
+}
+
+void ofApp::onSSLPrivateKeyPassphraseRequired(std::string& passphrase)
+{
+	// If you want to proceed, you must allow the user to input the assign the private key's
+	// passphrase to the `passphrase` argument.  For example:
+
+	//passphrase = ofSystemTextBoxDialog("Enter the Private Key Passphrase", "");
 
 }

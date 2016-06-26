@@ -124,6 +124,9 @@
 		<ClCompile Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\src\Settings.cpp">
 			<Filter>addons\ofxSMTP\libs\ofxSMTP\src</Filter>
 		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSSLManager\src\ofSSLManager.cpp">
+			<Filter>addons\ofxSSLManager\src</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxVectorGraphics\src\ofxVectorGraphics.cpp">
 			<Filter>addons\ofxVectorGraphics\src</Filter>
 		</ClCompile>
@@ -296,6 +299,12 @@
 		</Filter>
 		<Filter Include="addons\ofxSMTP\libs\ofxSMTP\src">
 			<UniqueIdentifier>{F06A31EC-554B-39B1-DC54-AE87}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSSLManager">
+			<UniqueIdentifier>{6BB2751F-353D-4217-67D5-26CE}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSSLManager\src">
+			<UniqueIdentifier>{4024F8A5-1F4B-AFDB-E4BD-7E0C}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxVectorGraphics">
 			<UniqueIdentifier>{5A7F3658-B06B-DB97-F4E1-DD19}</UniqueIdentifier>
@@ -943,6 +952,9 @@
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP\Types.h">
 			<Filter>addons\ofxSMTP\libs\ofxSMTP\include\ofx\SMTP</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSSLManager\src\ofSSLManager.h">
+			<Filter>addons\ofxSSLManager\src</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxVectorGraphics\src\ofxVectorGraphics.h">
 			<Filter>addons\ofxVectorGraphics\src</Filter>

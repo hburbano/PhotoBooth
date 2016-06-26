@@ -4,4 +4,5 @@ ofxMSAInteractiveObject
 ofxNetwork
 ofxOpenCv
 ofxSMTP
+ofxSSLManager
 ofxVectorGraphics

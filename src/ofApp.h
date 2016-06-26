@@ -6,6 +6,8 @@
 #include "ofUtils.h"
 #include "ImageButton.h"
 #include "Poco/Timestamp.h"
+#include "ofMain.h"
+#include "ofxSMTP.h"
 #include <vector>
 
 using namespace ofxCv;
@@ -62,6 +64,7 @@ public:
 	//Backgrounds & logo
 	ofImage photoBackground;
 	ofImage logo;
+	ofImage lema;
 	std::vector<std::string> backgroundList;
 	int currentBackground;
 	bool updateBackground = true;
@@ -88,5 +91,14 @@ public:
 	ofParameter<string> pname;
 	ofParameter<string> email;
 	//ofParameter<enum> cas;
+
+	// Send email
+
+	void onSMTPDelivery(ofx::SMTP::Message::SharedPtr& message);
+	void onSMTPException(const ofx::SMTP::ErrorArgs& evt);
+	void onSSLClientVerificationError(Poco::Net::VerificationErrorArgs& args);
+	void onSSLPrivateKeyPassphraseRequired(std::string& passphrase);
+	std::string senderEmail;
+	ofx::SMTP::Client smtp;
 
 };
