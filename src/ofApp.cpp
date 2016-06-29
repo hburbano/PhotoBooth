@@ -9,7 +9,7 @@ void ofApp::setup() {
 	// 720p -> 1280 * 720
 	// 1080p -> 1920 * 1080
 	camWidth = 854;
-	camHeight = 480;
+	camHeight = 640;
 	gridSpace = 0;
 
 	lowmargin = 10;
@@ -25,17 +25,17 @@ void ofApp::setup() {
 
 	//Config Buttons
 	picButton.setImage("buttons/camera.png");
-	picButton.set((camWidth - buttonSize)/2, camHeight - buttonSize - lowmargin, buttonSize, buttonSize);
+	picButton.set((ofGetWidth() - buttonSize)/2, ofGetHeight() - buttonSize - lowmargin, buttonSize, buttonSize);
 	nextButton.setImage("buttons/next.png");
-	nextButton.set(camWidth - (buttonSize * 2), (camHeight - buttonSize) / 2, buttonSize, buttonSize);
+	nextButton.set(ofGetWidth() - (buttonSize * 2), (ofGetHeight() - buttonSize) / 2, buttonSize, buttonSize);
 	prevButton.setImage("buttons/prev.png");
-	prevButton.set(buttonSize, (camHeight - buttonSize) / 2, buttonSize, buttonSize);
+	prevButton.set(buttonSize, (ofGetHeight() - buttonSize) / 2, buttonSize, buttonSize);
 	backButton.setImage("buttons/back.png");
-	backButton.set((camWidth - buttonSize - spacing) / 2, camHeight - buttonSize - lowmargin, buttonSize, buttonSize);
+	backButton.set((ofGetWidth() - buttonSize - spacing) / 2, ofGetHeight() - buttonSize - lowmargin, buttonSize, buttonSize);
 	facebookButton.setImage("buttons/facebook.jpg");
-	facebookButton.set((camWidth - buttonSize) / 2, camHeight - buttonSize - lowmargin, buttonSize, buttonSize);
+	facebookButton.set((ofGetWidth() - buttonSize) / 2, ofGetHeight() - buttonSize - lowmargin, buttonSize, buttonSize);
 	printButton.setImage("buttons/printer.png");
-	printButton.set((camWidth - buttonSize + spacing) / 2, camHeight - buttonSize - lowmargin, buttonSize, buttonSize);
+	printButton.set((ofGetWidth() - buttonSize + spacing) / 2, ofGetHeight() - buttonSize - lowmargin, buttonSize, buttonSize);
 	backButton.enabled = false;
 	facebookButton.enabled = false;
 	printButton.enabled = false;
@@ -51,6 +51,9 @@ void ofApp::setup() {
 	videoComposition.allocate(camWidth, camHeight, OF_PIXELS_RGB);
 	videoTexture.allocate(videoComposition);
 	logo.loadImage("backgrounds/logo.jpg");
+	int newWidth = ofGetWidth() * 0.15;
+	int newHeigth = logo.getHeight() * (newWidth / logo.getWidth() );
+	logo.resize(newWidth, newHeigth);
 	lema.loadImage("backgrounds/lema.jpg");
 
 
@@ -91,12 +94,12 @@ void ofApp::snap() {
 	temp.save(fileName);
 }
 
-void ofApp::imageUploadUpdate() {
-	
+void ofApp::imageUploadDraw() {
+	imgComp.draw(gridSpace, gridSpace, ofGetWidth(), ofGetHeight());
 }
 
-void ofApp::imageUploadDraw() {
-	imgComp.draw(0, 0);
+void ofApp::imageUploadUpdate() {
+	//Do nothig
 }
 
 void ofApp::videoCaptureUpdate() {
@@ -152,10 +155,10 @@ void ofApp::videoCaptureDraw() {
 	//vidGrabber.draw(gridSpace, gridSpace);
 	if (thresholded.isAllocated()) {
 		if (switchBackground) {
-			videoTexture.draw(gridSpace, gridSpace, camWidth, camHeight);
+			videoTexture.draw(gridSpace, gridSpace, ofGetWidth(), ofGetHeight());
 		}
 		else {
-			thresholded.draw(gridSpace, gridSpace, camWidth, camHeight);
+			thresholded.draw(gridSpace, gridSpace, ofGetWidth(), ofGetHeight());
 		}
 	}
 
@@ -283,7 +286,7 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	if (fbkPressed) {
 		ofx::SMTP::Message::SharedPtr message = ofx::SMTP::Message::makeShared();
 		message->setSender(Poco::Net::MailMessage::encodeWord(senderEmail, "UTF-8"));
-		message->setSubject(Poco::Net::MailMessage::encodeWord("CASA DE LA MEMORIA", "UTF-8"));
+		message->setSubject(Poco::Net::MailMessage::encodeWord("Constructor de PAZ", "UTF-8"));
 		message->addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,
 			email.toString()));
 		try
@@ -293,7 +296,7 @@ void ofApp::mouseReleased(int x, int y, int button) {
 			path.insert(2, "/");
 			path.replace(2, 2, "\\");
 			message->addAttachment(Poco::Net::MailMessage::encodeWord(fileName, "UTF-8"),
-				new Poco::Net::FilePartSource(path));
+				new Poco::Net::FilePartSource(path, "png"));
 		}
 		catch (const Poco::OpenFileException& exc)
 		{

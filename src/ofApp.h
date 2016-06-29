@@ -19,8 +19,6 @@ public:
 	void setup();
 	void update();
 	void draw();
-
-
 	void keyPressed(int key);
 	void keyReleased(int key);
 	void mouseMoved(int x, int y);
@@ -93,7 +91,6 @@ public:
 	//ofParameter<enum> cas;
 
 	// Send email
-
 	void onSMTPDelivery(ofx::SMTP::Message::SharedPtr& message);
 	void onSMTPException(const ofx::SMTP::ErrorArgs& evt);
 	void onSSLClientVerificationError(Poco::Net::VerificationErrorArgs& args);
