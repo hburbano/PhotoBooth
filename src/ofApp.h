@@ -47,9 +47,10 @@ public:
 	ImageButton backButton;
 	ImageButton facebookButton;
 	ImageButton printButton;
+	ImageButton closeButton;
 	int buttonSize;
 	int spacing;
-	int lowmargin;
+	int margin;
 
 	//Sate
 	enum states { imageCapture = 1,  imageUpload= 2};
@@ -91,6 +92,7 @@ public:
 	//ofParameter<enum> cas;
 
 	// Send email
+	void sendEmail();
 	void onSMTPDelivery(ofx::SMTP::Message::SharedPtr& message);
 	void onSMTPException(const ofx::SMTP::ErrorArgs& evt);
 	void onSSLClientVerificationError(Poco::Net::VerificationErrorArgs& args);

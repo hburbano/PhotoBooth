@@ -3,16 +3,16 @@
 
 
 void ofApp::setup() {
-
+	FreeConsole();
 	// Check Lenovo AIO res ?
 	// 480p -> 854//640 * 480
 	// 720p -> 1280 * 720
 	// 1080p -> 1920 * 1080
-	camWidth = 854;
-	camHeight = 640;
+	camWidth = 1280;
+	camHeight = 720;
 	gridSpace = 0;
 
-	lowmargin = 10;
+	margin = 10;
 	buttonSize = 50;
 	spacing = buttonSize * 7;
 
@@ -25,17 +25,20 @@ void ofApp::setup() {
 
 	//Config Buttons
 	picButton.setImage("buttons/camera.png");
-	picButton.set((ofGetWidth() - buttonSize)/2, ofGetHeight() - buttonSize - lowmargin, buttonSize, buttonSize);
+	picButton.set((ofGetWidth() - buttonSize)/2, ofGetHeight() - buttonSize - margin, buttonSize, buttonSize);
 	nextButton.setImage("buttons/next.png");
 	nextButton.set(ofGetWidth() - (buttonSize * 2), (ofGetHeight() - buttonSize) / 2, buttonSize, buttonSize);
 	prevButton.setImage("buttons/prev.png");
 	prevButton.set(buttonSize, (ofGetHeight() - buttonSize) / 2, buttonSize, buttonSize);
 	backButton.setImage("buttons/back.png");
-	backButton.set((ofGetWidth() - buttonSize - spacing) / 2, ofGetHeight() - buttonSize - lowmargin, buttonSize, buttonSize);
+	backButton.set((ofGetWidth() - buttonSize - spacing) / 2, ofGetHeight() - buttonSize - margin, buttonSize, buttonSize);
 	facebookButton.setImage("buttons/facebook.jpg");
-	facebookButton.set((ofGetWidth() - buttonSize) / 2, ofGetHeight() - buttonSize - lowmargin, buttonSize, buttonSize);
+	facebookButton.set((ofGetWidth() - buttonSize) / 2, ofGetHeight() - buttonSize - margin, buttonSize, buttonSize);
 	printButton.setImage("buttons/printer.png");
-	printButton.set((ofGetWidth() - buttonSize + spacing) / 2, ofGetHeight() - buttonSize - lowmargin, buttonSize, buttonSize);
+	printButton.set((ofGetWidth() - buttonSize + spacing) / 2, ofGetHeight() - buttonSize - margin, buttonSize, buttonSize);
+	closeButton.setImage("buttons/close.png");
+	closeButton.set((ofGetWidth() - buttonSize - margin), margin, buttonSize, buttonSize);
+
 	backButton.enabled = false;
 	facebookButton.enabled = false;
 	printButton.enabled = false;
@@ -56,17 +59,16 @@ void ofApp::setup() {
 	logo.resize(newWidth, newHeigth);
 	lema.loadImage("backgrounds/lema.jpg");
 
-
 	//Config GUI
 
 	gui.setup();
 	gui.setSize(400, 200);
-	gui.add(resetBackground.set("Reset: X", false));
-	gui.add(switchBackground.set("Switch: Z", true));
-	gui.add(snapPhoto.set("Photo: P ", false));
+	gui.add(resetBackground.set("Reset (X)", false));
+	gui.add(switchBackground.set("Switch (Z)", true));
+	gui.add(snapPhoto.set("Photo (P)", false));
 	//gui.add(learningTime.set("Learning Time", 5, 0, 30));
-	gui.add(thresholdValue.set("Threshold: + -", 30, 0, 255));
-	gui.add(showGUI.set("Config: C", false));
+	gui.add(thresholdValue.set("Thresh (E R)", 30, 0, 255));
+	gui.add(showGUI.set("Config (C)", false));
 	gui.add(pname.set("Printer", "PDFCreator"));
 	gui.add(email.set("Email", "nu8guvofzqstr@tumblr.com"));
 	//gui.saveToFile("settings.xml");
@@ -198,6 +200,32 @@ void ofApp::draw() {
 	}
 }
 
+void ofApp::sendEmail() {
+	ofx::SMTP::Message::SharedPtr message = ofx::SMTP::Message::makeShared();
+	message->setSender(Poco::Net::MailMessage::encodeWord(senderEmail, "UTF-8"));
+	message->setSubject(Poco::Net::MailMessage::encodeWord("Constructor de PAZ", "UTF-8"));
+	message->addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,
+		email.toString()));
+	string msgEmail = Poco::DateTimeFormatter::format(now,
+		"Construyendo PAZ, %Y-%n-%e",
+		-5000);
+	message->addContent(new Poco::Net::StringPartSource(msgEmail));
+	try
+	{
+		string path = ofToDataPath(fileName, true);
+		//Fix error in ofToDataPath specific for Windows 10
+		path.insert(2, "/");
+		path.replace(2, 2, "\\");
+		message->addAttachment(Poco::Net::MailMessage::encodeWord(fileName, "UTF-8"),
+			new Poco::Net::FilePartSource(path, "image/png"));
+	}
+	catch (const Poco::OpenFileException& exc)
+	{
+		ofLogError("ofApp::keyPressed") << exc.name() << " : " << exc.displayText();
+	}
+	smtp.send(message);
+}
+
 void ofApp::saveSettings() {
 	gui.saveToFile("settings.xml");
 }
@@ -241,12 +269,14 @@ void ofApp::keyPressed(int key) {
 	case 'Z':
 		switchBackground = !switchBackground;
 		break;
-	case '+':
+	case 'e':
+	case 'E':
 		thresholdValue++;
 		if (thresholdValue > 255) thresholdValue = 255;
 		saveSettings();
 		break;
-	case '-':
+	case 'r':
+	case 'R':
 		thresholdValue--;
 		if (thresholdValue < 0) thresholdValue = 0;
 		saveSettings();
@@ -282,27 +312,14 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	bool nxtPressed = nextButton.isMouseDown();
 	bool prtPressed = printButton.isMouseDown();
 	bool fbkPressed = facebookButton.isMouseDown();
+	bool clsPressed = closeButton.isMouseDown();
 	
+	if (clsPressed) {
+		std::exit(1);
+	}
+
 	if (fbkPressed) {
-		ofx::SMTP::Message::SharedPtr message = ofx::SMTP::Message::makeShared();
-		message->setSender(Poco::Net::MailMessage::encodeWord(senderEmail, "UTF-8"));
-		message->setSubject(Poco::Net::MailMessage::encodeWord("Constructor de PAZ", "UTF-8"));
-		message->addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,
-			email.toString()));
-		try
-		{
-			string path = ofToDataPath(fileName, true);
-			//Fix error in ofToDataPath specific for Windows 10
-			path.insert(2, "/");
-			path.replace(2, 2, "\\");
-			message->addAttachment(Poco::Net::MailMessage::encodeWord(fileName, "UTF-8"),
-				new Poco::Net::FilePartSource(path, "png"));
-		}
-		catch (const Poco::OpenFileException& exc)
-		{
-			ofLogError("ofApp::keyPressed") << exc.name() << " : " << exc.displayText();
-		}
-		smtp.send(message);
+		sendEmail();
 	}
 
 	if (prtPressed) {
