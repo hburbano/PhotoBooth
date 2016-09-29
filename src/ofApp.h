@@ -9,6 +9,7 @@
 #include "ofMain.h"
 #include "ofxSMTP.h"
 #include <vector>
+#include "ofxXmlSettings.h"
 
 using namespace ofxCv;
 using namespace cv;
@@ -80,6 +81,8 @@ public:
 	int gridSpace;
 
 	void saveSettings();
+
+	ofxXmlSettings xmlSettings;
 	ofxPanel gui;
 	ofParameter<bool> resetBackground;
 	ofParameter<bool> switchBackground;

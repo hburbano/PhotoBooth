@@ -59,22 +59,21 @@ void ofApp::setup() {
 	logo.resize(newWidth, newHeigth);
 	lema.loadImage("backgrounds/lema.jpg");
 
+	
 	//Config GUI
-
 	gui.setup();
 	gui.setSize(400, 200);
-	gui.add(resetBackground.set("Reset (X)", false));
-	gui.add(switchBackground.set("Switch (Z)", true));
-	gui.add(snapPhoto.set("Photo (P)", false));
+	xmlSettings.loadFile("settings.xml");
+	gui.add(resetBackground.set("Reset (X)", xmlSettings.getValue("settings:reset", false)));
+	gui.add(switchBackground.set("Switch (Z)", xmlSettings.getValue("settings:switch", true)));
+	gui.add(snapPhoto.set("Photo (P)", xmlSettings.getValue("settings:photo", false)));
 	//gui.add(learningTime.set("Learning Time", 5, 0, 30));
-	gui.add(thresholdValue.set("Thresh (E R)", 30, 0, 255));
-	gui.add(showGUI.set("Config (C)", false));
-	gui.add(pname.set("Printer", "PDFCreator"));
-	gui.add(email.set("Email", "nu8guvofzqstr@tumblr.com"));
-	//gui.saveToFile("settings.xml");
-	gui.loadFromFile("settings.xml");
+	gui.add(thresholdValue.set("Thresh (E R)", xmlSettings.getValue("settings:threshold", 30), 0, 255));
+	gui.add(showGUI.set("Show Config (C)", xmlSettings.getValue("settings:showconfig", false)));
+	gui.add(pname.set("Printer", xmlSettings.getValue("settings:printer", "PDFCreator")));
+	gui.add(email.set("Email", xmlSettings.getValue("settings:email", "pbcasamentco@gmail.com")));
 
-	
+	switchBackground = true;
 	//Background options
 	currentBackground = 0;
 	backgroundList.push_back("backgrounds/back01.jpg");
@@ -172,6 +171,11 @@ void ofApp::videoCaptureDraw() {
 void ofApp::update() {
 	ofBackground(100, 100, 100);
 
+	/*int w = ofGetWidth();
+	int h = ofGetHeight();
+	if (w != camWidth || h != camHeight) ofSetWindowShape(camWidth, camHeight);*/
+
+
 	switch (currentState)
 	{
 	case ofApp::imageCapture:
@@ -207,8 +211,7 @@ void ofApp::sendEmail() {
 	message->addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT,
 		email.toString()));
 	string msgEmail = Poco::DateTimeFormatter::format(now,
-		"Construyendo PAZ, %Y-%n-%e",
-		-5000);
+		"Construyendo PAZ, %Y-%n-%e");
 	message->addContent(new Poco::Net::StringPartSource(msgEmail));
 	try
 	{
@@ -227,7 +230,14 @@ void ofApp::sendEmail() {
 }
 
 void ofApp::saveSettings() {
-	gui.saveToFile("settings.xml");
+	xmlSettings.setValue("settings:reset", resetBackground.get());
+	xmlSettings.setValue("settings:switch", switchBackground.get());
+	xmlSettings.setValue("settings:photo", snapPhoto.get());
+	xmlSettings.setValue("settings:threshold", thresholdValue.get());
+	xmlSettings.setValue("settings:showconfig", showGUI.get());
+	xmlSettings.setValue("settings:printer", pname.get());
+	xmlSettings.setValue("settings:email", email.get());
+	xmlSettings.saveFile("settings.xml");
 }
 
 //--------------------------------------------------------------
@@ -267,7 +277,8 @@ void ofApp::keyPressed(int key) {
 		break;
 	case 'z':
 	case 'Z':
-		switchBackground = !switchBackground;
+		// Debuging option
+		// switchBackground = !switchBackground;
 		break;
 	case 'e':
 	case 'E':

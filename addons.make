@@ -6,3 +6,4 @@ ofxOpenCv
 ofxSMTP
 ofxSSLManager
 ofxVectorGraphics
+ofxXmlSettings
